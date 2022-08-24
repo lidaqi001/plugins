@@ -28,13 +28,13 @@ func GetProgramName() (string, error) {
 		return "", errors.New(`error: Can't find "/" or "\".`)
 	}
 
-	strProgram := string(path[i+1:])
+	strProgram := path[i+1:]
 	j := strings.LastIndex(strProgram, ".")
 	if j > 0 {
-		return string(strProgram[0:j]), nil
+		return strProgram[0:j], nil
 	}
 
-	return string(strProgram[:]), nil
+	return strProgram[:], nil
 }
 
 // RandomMixString 随机生成字符串(英文数字混合)
