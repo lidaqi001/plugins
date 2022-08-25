@@ -164,6 +164,8 @@ func (s *subscriber) resubscribe() {
 			case <-s.unsub:
 				return
 			case d, ok := <-sub:
+				// 检测Delivery通道关闭，跳出循环
+				// 这是断线重新连接后重新订阅的关键一步
 				if !ok {
 					break SubLoop
 				}
