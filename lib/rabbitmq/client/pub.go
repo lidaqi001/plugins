@@ -1,8 +1,8 @@
 package client
 
 import (
-	"github.com/lidaqi001/plugins/lib/rabbitmq/broker"
 	jsoniter "github.com/json-iterator/go"
+	"github.com/lidaqi001/plugins/lib/rabbitmq/broker"
 )
 
 type Pub struct {
@@ -10,8 +10,8 @@ type Pub struct {
 	mq       broker.Broker
 }
 
-func GetPub(addr, exchange string, fanout bool) (*Pub, error) {
-	m, err := NewClient(addr, exchange, fanout)
+func GetPub(addr, exchange string, opt ...broker.Option) (*Pub, error) {
+	m, err := NewClient(addr, exchange, opt...)
 	return &Pub{
 		Exchange: exchange,
 		mq:       m,

@@ -10,8 +10,8 @@ type Sub struct {
 	mq       broker.Broker
 }
 
-func GetSub(addr, exchange string, fanout bool) (*Sub, error) {
-	m, err := NewClient(addr, exchange, fanout)
+func GetSub(addr, exchange string, opt ...broker.Option) (*Sub, error) {
+	m, err := NewClient(addr, exchange, opt...)
 	return &Sub{
 		Exchange: exchange,
 		mq:       m,
