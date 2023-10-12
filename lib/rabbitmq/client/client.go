@@ -5,6 +5,9 @@ import (
 	mq "github.com/lidaqi001/plugins/lib/rabbitmq"
 	"github.com/lidaqi001/plugins/lib/rabbitmq/broker"
 	"log"
+	"os"
+	"os/signal"
+	"syscall"
 )
 
 var (
@@ -77,4 +80,17 @@ func newClient(addr, exchange string, opt ...broker.Option) (cli broker.Broker, 
 	cli = mq.NewBroker(opts...)
 	err = cli.Init()
 	return
+}
+
+// WaitForSignals 监听信号
+func WaitForSignals(shutFunc func()) error {
+	println("Send signal TERM or INT to terminate the process")
+	sigs := make(chan os.Signal, 1)
+	signal.Notify(sigs, syscall.SIGTERM, syscall.SIGINT)
+	<-sigs
+
+	//执行回调
+	shutFunc()
+
+	return nil
 }
