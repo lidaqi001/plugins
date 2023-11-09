@@ -285,7 +285,7 @@ func (r *rbroker) Subscribe(topic string, handler broker.Handler, opts ...broker
 	// 设置交换机为 DelayExchange
 	/**	@auth liqi lidaqi962464@qq.com	*/
 	if val, ok := ctx.Value(delayQueue{}).(bool); ok && val {
-		r.conn.exchange = DelayExchange
+		r.conn.exchange = DefaultDelayExchange
 	}
 
 	var requeueOnError bool

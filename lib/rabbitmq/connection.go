@@ -26,14 +26,14 @@ var (
 	DefaultPrefetchGlobal = false
 	DefaultRequeueOnError = false
 
-	// 延时消息
+	// DefaultDelayExchange 延时队列交换机
 	/**	@auth liqi lidaqi962464@qq.com	*/
-	DelayExchange = Exchange{
+	DefaultDelayExchange = Exchange{
 		Name: "micro.delay",
 		Kind: amqp.ExchangeTopic,
 	}
-	DefaultDelayQueue = "micro.delay"
-	DelayPrefix       = "micro.delay."
+	DefaultDelayQueue = DefaultDelayExchange.Name
+	DelayPrefix       = DefaultDelayExchange.Name + "."
 
 	// The amqp library does not seem to set these when using amqp.DialConfig
 	// (even though it says so in the comments) so we set them manually to make
@@ -273,7 +273,7 @@ func (r *rabbitMQConn) Consume(queue, key string, headers amqp.Table, qArgs amqp
 
 	// 延时队列
 	/**	@auth liqi lidaqi962464@qq.com	*/
-	if r.exchange == DelayExchange {
+	if r.exchange == DefaultDelayExchange {
 		// 延时队列前缀+队列名称
 		queue = DelayPrefix + queue
 		key = DelayPrefix + key
@@ -330,7 +330,7 @@ func (r *rabbitMQConn) declareDelay() error {
 	if err != nil {
 		return err
 	}
-	err = delayerChannel.DeclareDurableExchange(DelayExchange)
+	err = delayerChannel.DeclareDurableExchange(DefaultDelayExchange)
 	if err != nil {
 		return err
 	}
@@ -338,8 +338,8 @@ func (r *rabbitMQConn) declareDelay() error {
 	// 声明延时队列
 	// 并将死信消息设置投递至延时交换机
 	err = r.ExchangeChannel.DeclareDurableQueue(DefaultDelayQueue, amqp.Table{
-		// 当消息过期时把消息发送到 DelayExchange 这个交换机
-		"x-dead-letter-exchange": DelayExchange.Name,
+		// 当消息过期时把消息发送到 DefaultDelayExchange 这个交换机
+		"x-dead-letter-exchange": DefaultDelayExchange.Name,
 	})
 
 	return err
