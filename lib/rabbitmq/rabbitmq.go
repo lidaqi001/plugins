@@ -2,7 +2,6 @@ package rabbitmq
 
 import (
 	"context"
-	"fmt"
 	"github.com/lidaqi001/plugins/lib/rabbitmq/broker"
 	"github.com/pkg/errors"
 	"github.com/streadway/amqp"
@@ -403,7 +402,6 @@ func (r *rbroker) getExchange() Exchange {
 	}
 
 	if k, ok := r.opts.Context.Value(kindExchange{}).(string); ok {
-		ex.Name = fmt.Sprint(ex.Name, "_", k)
 		ex.Kind = k
 	}
 
